@@ -34,24 +34,26 @@ const attrsToString = (obj = {}) => {
   return string
 }
 
-const tagAttrs = obj => (content = "") =>
-  `<${obj.tag}${obj.attrs} ? ' ' : ''${attrsToString(obj.attrs)}>${content}</${obj.tag}>`
+const tagAttrs = obj => (content = '') =>
+  `<${obj.tag}${obj.attrs ? ' ' :	 ''}${attrsToString(obj.attrs)}>${content}</${obj.tag}>`
 
 const tag = t => {
-
-  if(typeof t === 'string')
-    tagAttrs({tag: t})
-  else
-    tagAttrs(t)
+  
+    if(typeof t === 'string')
+      return tagAttrs({ tag: t })
+    
+    return tagAttrs(t)
 }
+  
 
-const tableRowTag = tag('tr')
+
 // const tableRow = items => tableRowTag(tableCells(items))
 // Otra forma de hacerlo
+const tableRowTag = tag('tr')
 const tableRow = items => compose(tableRowTag, tableCells)(items)
 
 const tableCell = tag('td')
-const tableCells = items => items.map(tableCell.join(''))
+const tableCells = items => items.map(tableCell).join('')
 
 const validateInputs = () => {
 
@@ -77,7 +79,7 @@ const add = () => {
   list.push(newItem)
   cleanInputs()
   updateTotals()
-  console.log(list)
+  renderItems()
 
 }
 
@@ -100,4 +102,12 @@ const cleanInputs = () => {
   $calories.value     = ''
   $carbs.value        = ''
   $protein.value      = ''
+}
+
+const renderItems = () => {
+  $('tbody').empty()
+
+  list.map(item => {
+    $('tbody').append(tableRow([item.description, item.calories, item.carbs, item.protein]))
+  })
 }
