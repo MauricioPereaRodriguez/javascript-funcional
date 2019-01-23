@@ -45,6 +45,14 @@ const tag = t => {
     tagAttrs(t)
 }
 
+const tableRowTag = tag('tr')
+// const tableRow = items => tableRowTag(tableCells(items))
+// Otra forma de hacerlo
+const tableRow = items => compose(tableRowTag, tableCells)(items)
+
+const tableCell = tag('td')
+const tableCells = items => items.map(tableCell.join(''))
+
 const validateInputs = () => {
 
   ($description.value === '') ? $description.classList.add('is-invalid'): '';
@@ -68,8 +76,23 @@ const add = () => {
 
   list.push(newItem)
   cleanInputs()
+  updateTotals()
   console.log(list)
 
+}
+
+const updateTotals = () => {
+  let calories = 0, carbs = 0, protein = 0
+
+  list.map(item => {
+    calories += item.calories,
+    carbs += item.carbs,
+    protein += item.protein
+  })
+
+  $totalCalories.textContent  = calories
+  $totalCarbs.textContent     = carbs
+  $totalProtein.textContent   = protein
 }
 
 const cleanInputs = () => {
